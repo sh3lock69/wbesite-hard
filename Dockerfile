@@ -1,16 +1,29 @@
-FROM php:8.2-apache
+# Use an official PHP image with Composer
+FROM php:8.1-apache
 
-# Install dependencies (if needed, add additional packages here)
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+# Install required PHP extensions
+RUN apt-get update && apt-get install -y \
+    libzip-dev unzip git curl \
+    && docker-php-ext-install zip mysqli pdo pdo_mysql
 
-# Enable mod_rewrite if needed (optional)
-RUN a2enmod rewrite
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Copy website files to Apache's document root
-COPY . /var/www/html/
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy project files to container
+COPY . .
+
+# Install dependencies
 RUN composer install --no-dev --optimize-autoloader
+
+# Set proper permissions
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
 # Expose port 80
 EXPOSE 80
 
+# Start Apache
 CMD ["apache2-foreground"]
