@@ -9,8 +9,11 @@ RUN apt-get update && apt-get install -y \
     libzip-dev unzip git curl \
     && docker-php-ext-install zip pdo pdo_mysql
 
-# Install Composer
+# Install Composer manually
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Verify Composer installation
+RUN composer --version
 
 # Copy project files
 COPY . /var/www/html
