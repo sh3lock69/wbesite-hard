@@ -19,10 +19,8 @@ RUN composer --version
 COPY . /var/www/html
 
 # **Ensure necessary Laravel directories exist before setting permissions**
-RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Set proper permissions
-RUN chown -R www-data:www-data /var/www/html \
+RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Install PHP dependencies using Composer
