@@ -8,6 +8,7 @@ RUN a2enmod rewrite
 
 # Copy website files to Apache's document root
 COPY . /var/www/html/
+RUN composer install --no-dev --optimize-autoloader
 
 # Expose port 80
 EXPOSE 80
